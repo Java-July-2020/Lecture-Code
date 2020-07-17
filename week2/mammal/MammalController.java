@@ -5,6 +5,7 @@ public class MammalController {
   public static void main(String[] args) {
     // Instantiate New Mammal Class
     Mammal human = new Mammal("human", 100);
+    human.getSpecies();
 
     // Instantiate New Gorilla Object, child of Mammal
     // and attackable object
