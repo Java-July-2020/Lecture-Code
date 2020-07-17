@@ -1,4 +1,4 @@
-package week2;
+package week2.pizza;
 
 public class PizzaMaker {
   // Entry Point Function
