@@ -23,7 +23,7 @@ class Calculator {
     // Logic 
     public void performOperation(Character ch){
       // If the Operand is not =, add to the operators ArrayList 
-        if (ch != "="){
+        if (ch != '='){
             operators.add(ch);
         }
       // If it is an equals sign, do the calculations.
@@ -34,10 +34,10 @@ class Calculator {
             for(int i = 0; i < operators.size(); i++){
               // Switch Statement, basically if/if else/else
                 switch(operators.get(i)){
-                    case "+": numsInProgress = numsInProgress + nums.get(i); break;
-                    case "-": numsInProgress = numsInProgress - nums.get(i); break;
-                    case "/": numsInProgress = numsInProgress / nums.get(i); break;
-                    case "*": numsInProgress = numsInProgress * nums.get(i); break;
+                    case '+': numsInProgress = numsInProgress + nums.get(i); break;
+                    case '-': numsInProgress = numsInProgress - nums.get(i); break;
+                    case '/': numsInProgress = numsInProgress / nums.get(i); break;
+                    case '*': numsInProgress = numsInProgress * nums.get(i); break;
                     default: System.out.println("Operator Not Recognized"); break;
                 }
             }
