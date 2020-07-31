@@ -46,4 +46,9 @@ public class PetController {
 		return this.pService.updatePet(id, updatedPet);
 	}
 	
+	@RequestMapping("/pet/{species}")
+	public List<Pet> species(@PathVariable("species") String species){
+		return this.pService.getPetSpecies(species);
+	}
+	
 }

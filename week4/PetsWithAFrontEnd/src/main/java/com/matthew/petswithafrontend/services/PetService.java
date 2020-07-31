@@ -1,15 +1,15 @@
-package com.matthew.pets.services;
+package com.matthew.petswithafrontend.services;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.matthew.pets.models.Pet;
-import com.matthew.pets.repositories.PetRepository;
+import com.matthew.petswithafrontend.models.Pet;
+import com.matthew.petswithafrontend.repositories.PetRepository;
 
 @Service
 public class PetService {
-	private PetRepository pRepo;
+private PetRepository pRepo;
 	
 	public PetService(PetRepository repo) {
 		this.pRepo = repo;
@@ -29,6 +29,12 @@ public class PetService {
 	public Pet createPet(Pet newPet) {
 		return this.pRepo.save(newPet);
 	}
+	
+	public Pet createPet(String name, String species, int age) {
+		Pet newPet = new Pet(name, species, age);
+		return this.pRepo.save(newPet);
+	}
+	
 	// deletePet
 	public void deletePet(Long id) {
 		this.pRepo.deleteById(id);
@@ -38,7 +44,4 @@ public class PetService {
 		return this.pRepo.save(updatedPet);
 	}
 	
-	public List<Pet> getPetSpecies(String species){
-		return this.pRepo.findBySpecies(species);
-	}
 }
