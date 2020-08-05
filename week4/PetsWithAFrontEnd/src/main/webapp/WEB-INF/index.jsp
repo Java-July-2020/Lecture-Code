@@ -22,7 +22,7 @@
 <c:forEach items="${pets}" var="pet">
 <tr>
 <td>${pet.id}</td>
-<td>${pet.name}</td>
+<td><a href="/${pet.id}">${pet.name}</a></td>
 <td>${pet.species}</td>
 <td>${pet.age}</td>
 </tr>

@@ -19,14 +19,17 @@
     <form:label path="name">Name
     <form:errors path="name"/>
     <form:input path="name"/></form:label>
-    
+    </p>
+    <p>
     <form:label path="species">Species
     <form:errors path="species"/>
     <form:textarea path="species"/></form:label>
-    
+    </p>
+    <p>
     <form:label path="age">Age
     <form:errors path="age"/>
     <form:input path="age"/></form:label>
+    </p>
     <button>Add Pet To Database!</button>
 </form:form>
 

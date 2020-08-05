@@ -2,11 +2,14 @@ package com.matthew.petswithafrontend.models;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -26,12 +29,15 @@ public class Pet {
 	@NotNull
 	private String species;
 	private int age;
+	@OneToOne(mappedBy="pet", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private Tag tag;
 	@Column(updatable=false)
 	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	private Date createdAt;
 	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	private Date updatedAt;
 	
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = new Date();
@@ -102,5 +108,12 @@ public class Pet {
 		this.updatedAt = updatedAt;
 	}
 	
+	public Tag getTag() {
+		return tag;
+	}
+
+	public void setTag(Tag tag) {
+		this.tag = tag;
+	}
 	
 }

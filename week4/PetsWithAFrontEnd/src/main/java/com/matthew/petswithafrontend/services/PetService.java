@@ -40,7 +40,7 @@ private PetRepository pRepo;
 		this.pRepo.deleteById(id);
 	}
 	// updatePet
-	public Pet updatePet(Long id, Pet updatedPet) {
+	public Pet updatePet(Pet updatedPet) {
 		return this.pRepo.save(updatedPet);
 	}
 	

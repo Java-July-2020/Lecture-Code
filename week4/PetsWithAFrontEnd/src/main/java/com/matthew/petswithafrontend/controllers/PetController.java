@@ -9,21 +9,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.matthew.petswithafrontend.models.Pet;
+import com.matthew.petswithafrontend.models.Tag;
 import com.matthew.petswithafrontend.services.PetService;
+import com.matthew.petswithafrontend.services.TagService;
 
 @Controller
 public class PetController {
 	
 	private PetService pService;
+	private TagService tService;
 	
-	public PetController(PetService service) {
+	public PetController(PetService service, TagService tService) {
 		this.pService = service;
+		this.tService = tService;
 	}
 	@RequestMapping("/")
 	public String index(Model viewModel) {
@@ -34,7 +40,7 @@ public class PetController {
 	
 	@RequestMapping("/new")
 	public String create(@ModelAttribute("pet") Pet pet) {
-		return "new.jsp";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
@@ -47,6 +53,34 @@ public class PetController {
 			this.pService.createPet(pet);
 		}
 		return "redirect:/new";
+	}
+	
+	@RequestMapping("/{id}")
+	public String viewpet(@PathVariable("id") Long id, Model model, @ModelAttribute("tag") Tag tag) {
+		model.addAttribute("pet", pService.getOnePet(id));
+		return "show.jsp";
+	}
+	
+	@PostMapping("/tag")
+	public String createTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result, Model  model) {
+		Long petID = tag.getPet().getId();
+		if(result.hasErrors()) {
+			model.addAttribute("pet", pService.getOnePet(petID));
+			return "show.jsp";
+		} else {
+			this.tService.create(tag);
+			return "redirect:/" + petID;
+		}
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public String updatePet(@Valid @ModelAttribute("pet") Pet updatedPet, BindingResult result) {
+		if(result.hasErrors()) {
+			return "show.jsp";
+		} else {
+			pService.updatePet(updatedPet);
+			return "redirect:/";
+		}
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST)
