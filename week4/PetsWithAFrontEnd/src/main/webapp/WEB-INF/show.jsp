@@ -12,24 +12,35 @@
 <body>
 <h1>Welcome to Pets dot Com</h1>
 <hr>
+<div class="wrapper">
 <h3>Showing Details For <c:out value="${pet.name}" /></h3>
-
+<c:forEach items="${error}" var="err">
+<p>${err}</p>
+</c:forEach>
 
 <h2>Name:</h2>
-<p>${pet.name}
+<p>${pet.name}</p>
 <h2>Species:</h2>
-${pet.species}
+<p>${pet.species}</p>
+<c:if test="${pet.toys != null}">
+<h2>Toys:</h2>
+<ol>
+<c:forEach items="${pet.toys}" var="toy">
+	<li>${toy.name} (${toy.price})</li>
+</c:forEach>
+</ol>
+</c:if>
 <c:choose>
 <c:when test="${pet.tag != null}">
 <h2>City</h2>
-${pet.tag.city}
+<p>${pet.tag.city}</p>
 <h2>State</h2>
-${pet.tag.state}
+<p>${pet.tag.state}</p>
 </c:when>
 <c:otherwise>
 <form:form method="POST" action="/tag" modelAttribute="tag">
 	<form:hidden path="pet" value="${pet.id}" />
-    <p>
+    <div class="form-group"><p>
     <form:label path="city">City
     <form:errors path="city"/>
     <form:input path="city"/></form:label>
@@ -40,7 +51,9 @@ ${pet.tag.state}
     <form:textarea path="state"/></form:label>
   	</p>
     <button>Add Tag</button>
+    </div>
 </form:form>
+
 </c:otherwise>
 </c:choose>
 
@@ -64,7 +77,7 @@ ${pet.tag.state}
     </p>
     <button>Edit Pet Details</button>
 </form:form>
-
+</div>
 
 </body>
 

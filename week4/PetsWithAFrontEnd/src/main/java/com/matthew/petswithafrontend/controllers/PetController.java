@@ -40,7 +40,7 @@ public class PetController {
 	
 	@RequestMapping("/new")
 	public String create(@ModelAttribute("pet") Pet pet) {
-		return "redirect:/";
+		return "new.jsp";
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
@@ -62,7 +62,7 @@ public class PetController {
 	}
 	
 	@PostMapping("/tag")
-	public String createTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result, Model  model) {
+	public String createTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result, Model model) {
 		Long petID = tag.getPet().getId();
 		if(result.hasErrors()) {
 			model.addAttribute("pet", pService.getOnePet(petID));
@@ -74,7 +74,7 @@ public class PetController {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public String updatePet(@Valid @ModelAttribute("pet") Pet updatedPet, BindingResult result) {
+	public String updatePet(@Valid @ModelAttribute("pet") Pet updatedPet, BindingResult result,  @ModelAttribute("tag") Tag tag) {
 		if(result.hasErrors()) {
 			return "show.jsp";
 		} else {

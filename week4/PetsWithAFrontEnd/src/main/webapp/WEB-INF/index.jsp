@@ -8,13 +8,14 @@
 <h1>Welcome to Pets dot Com</h1>
 <hr>
 <a href="/new">Create a new pet for our database</a>
+<a href="/toys/new">Give a toy an existing pet</a>
 
 <table class="table table-dark">
 <thead>
 <tr>
 <td>ID</td>
 <td>Name</td>
-<td>Specices</td>
+<td>Species</td>
 <td>Age</td>
 </tr>
 </thead>
