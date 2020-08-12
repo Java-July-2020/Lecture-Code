@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.matthew.petswithafrontend.models.Pet;
+import com.matthew.petswithafrontend.models.User;
 import com.matthew.petswithafrontend.repositories.PetRepository;
 
 @Service
@@ -25,6 +26,11 @@ private PetRepository pRepo;
 	public List<Pet> getAllPets(){
 		return this.pRepo.findAll();
 	}
+	
+	public Long getPetContaining(String search) {
+		return this.pRepo.countByNameContaining(search);
+	}
+	
 	// createPet
 	public Pet createPet(Pet newPet) {
 		return this.pRepo.save(newPet);
@@ -43,5 +49,13 @@ private PetRepository pRepo;
 	public Pet updatePet(Pet updatedPet) {
 		return this.pRepo.save(updatedPet);
 	}
-	
+	//Add Likes to Pet
+	public void addLiker(User user, Pet pet) {
+		// get the list from the pet
+		List<User> likers = pet.getLikers();
+		// Add the liker
+		likers.add(user);
+		// Update DB
+		this.pRepo.save(pet);
+	}
 }

@@ -10,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -35,6 +38,13 @@ public class Pet {
 	private Tag tag;
 	@OneToMany(mappedBy="pet", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<Toy> toys;
+	@ManyToMany
+	@JoinTable(
+			name="likes",
+			joinColumns= @JoinColumn(name="pet_id"),
+			inverseJoinColumns= @JoinColumn(name="user_id")			
+			)
+	private List<User> likers;
 	@Column(updatable=false)
 	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	private Date createdAt;
@@ -126,6 +136,18 @@ public class Pet {
 
 	public void setToys(List<Toy> toys) {
 		this.toys = toys;
+	}
+
+	public List<User> getLikers() {
+		return likers;
+	}
+
+	public void setLikers(List<User> likers) {
+		this.likers = likers;
+	}
+	
+	public void addLiker(User liker) {
+		this.likers.add(liker);
 	}
 
 

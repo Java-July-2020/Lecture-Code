@@ -12,12 +12,18 @@
 <body>
 <h1>Welcome to Pets dot Com</h1>
 <hr>
-<div class="wrapper">
+<div class="container">
 <h3>Showing Details For <c:out value="${pet.name}" /></h3>
 <c:forEach items="${error}" var="err">
 <p>${err}</p>
 </c:forEach>
+<h3>Liked By:</h3>
+<ol>
+<c:forEach items="${pet.likers}" var="user">
+<li>${user.firstName} ${user.lastName}</li>
+</c:forEach>
 
+</ol>
 <h2>Name:</h2>
 <p>${pet.name}</p>
 <h2>Species:</h2>
@@ -40,16 +46,16 @@
 <c:otherwise>
 <form:form method="POST" action="/tag" modelAttribute="tag">
 	<form:hidden path="pet" value="${pet.id}" />
-    <div class="form-group"><p>
+    <div class="form-group">
     <form:label path="city">City
     <form:errors path="city"/>
     <form:input path="city"/></form:label>
-    </p>
-    <p>
+	</div>
+	<div class="form-group">
     <form:label path="state">State
     <form:errors path="state"/>
     <form:textarea path="state"/></form:label>
-  	</p>
+  	</div>
     <button>Add Tag</button>
     </div>
 </form:form>
@@ -60,21 +66,21 @@
 <hr>
 <form:form method="POST" action="/${pet.id}" modelAttribute="pet">
 	<input type="hidden" name="_method" value="put">
-    <p>
+    <div class="form-group">
     <form:label path="name">Name
     <form:errors path="name"/>
     <form:input path="name"/></form:label>
-    </p>
-    <p>
+    </div>
+    <div class="form-group">
     <form:label path="species">Species
     <form:errors path="species"/>
     <form:textarea path="species"/></form:label>
-    </p>
-    <p>
+    </div>
+    <div class="form-group">
     <form:label path="age">Age
     <form:errors path="age"/>
     <form:input path="age"/></form:label>
-    </p>
+    </div>
     <button>Edit Pet Details</button>
 </form:form>
 </div>

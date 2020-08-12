@@ -5,12 +5,9 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.matthew.petswithafrontend.models.Pet;
+import com.matthew.petswithafrontend.models.User;
 
 @Repository
-public interface PetRepository extends CrudRepository<Pet, Long>{
-	List<Pet> findAll();
-	Long countByNameContaining(String search);
-	
-
+public interface UserRepository extends CrudRepository<User, Long> {
+	List<User> findAll();
 }
