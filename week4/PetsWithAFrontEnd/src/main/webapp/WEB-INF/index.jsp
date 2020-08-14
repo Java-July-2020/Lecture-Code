@@ -11,7 +11,8 @@
 <h4>Greetings <c:out value="${user.firstName}"/></h4>
 <hr>
 <a href="/new">Create a new pet for our database</a> | 
-<a href="/toys/new">Give a toy an existing pet</a>
+<a href="/toys/new">Give a toy an existing pet</a> |
+<a href="/logout">Logout</a>
 <hr>
 <h3>All The Pets</h3>
 

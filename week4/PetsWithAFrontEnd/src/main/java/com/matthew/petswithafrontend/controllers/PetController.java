@@ -24,6 +24,7 @@ import com.matthew.petswithafrontend.models.User;
 import com.matthew.petswithafrontend.services.PetService;
 import com.matthew.petswithafrontend.services.TagService;
 import com.matthew.petswithafrontend.services.UserService;
+import com.matthew.petswithafrontend.validators.UserValidator;
 
 
 @Controller
@@ -32,27 +33,45 @@ public class PetController {
 	private PetService pService;
 	private TagService tService;
 	private UserService uService;
+	private UserValidator validator;
 
 	
-	public PetController(PetService service, TagService tService, UserService uService) {
+	public PetController(PetService service, TagService tService, UserService uService, UserValidator validator) {
 		this.pService = service;
 		this.tService = tService;
 		this.uService = uService;
+		this.validator = validator;
 
 	}
 	
 	@RequestMapping("/")
-	public String landing(Model viewModel) {
-		List<User> user = this.uService.allUser();
-		viewModel.addAttribute("users", user);
+	public String landing(@ModelAttribute("user") User user) {
+
 		return "landing.jsp";
 	}
 	
-	@RequestMapping("/login")
-	public String login(HttpSession session, @RequestParam("users") Long id) {
-		if(session.getAttribute("user_id")== null) {
-			session.setAttribute("user_id", id);
+	@PostMapping("/register")
+	public String register(@Valid @ModelAttribute("user") User newUser, BindingResult result, HttpSession session) {
+		validator.validate(newUser, result);
+		if(result.hasErrors()) {
+			// if there are any validation errors
+			// we want to return them to the index page
+			return "landing.jsp";
 		}
+		User user = this.uService.registerUser(newUser);
+		session.setAttribute("user_id", user.getId());
+		return "redirect:/pets";
+	}
+	
+	
+	@RequestMapping("/login")
+	public String login(@RequestParam("email") String email, @RequestParam("password") String password, RedirectAttributes redirectAttrs, HttpSession session) {
+		if(!this.uService.authenticateUser(email, password)) {
+			redirectAttrs.addFlashAttribute("loginError", "Invalid Credentials");
+			return "redirect:/";
+		}
+		User user = this.uService.getByemail(email);
+		session.setAttribute("user_id", user.getId());
 		return "redirect:/pets";
 	}
 	
@@ -68,8 +87,12 @@ public class PetController {
 	
 	@RequestMapping("/pets")
 	public String pets(Model viewModel, HttpSession session) {
-		Long userID = (long) session.getAttribute("user_id");
+		Long userID = (Long)session.getAttribute("user_id");
 		User user = this.uService.findAUser(userID);
+		if(userID == null) {
+			return "redirect:/";
+		}
+		
 		List<Pet> pets = this.pService.getAllPets();
 		viewModel.addAttribute("pets", pets);
 		viewModel.addAttribute("user", user);
@@ -140,6 +163,13 @@ public class PetController {
 		
 		// Add A Pet
 		this.pService.createPet(name, species, age);
+		return "redirect:/";
+	}
+	
+	
+	@RequestMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
 		return "redirect:/";
 	}
 }
