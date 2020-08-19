@@ -15,6 +15,7 @@
 </c:forEach>
 
 <form:form method="POST" action="/" modelAttribute="pet">
+	<form:hidden path="owner" value="${userId}" />
     <p>
     <form:label path="name">Name
     <form:errors path="name"/>

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -38,6 +39,11 @@ public class Pet {
 	private Tag tag;
 	@OneToMany(mappedBy="pet", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<Toy> toys;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	private User owner;
+	
 	@ManyToMany
 	@JoinTable(
 			name="likes",
@@ -96,6 +102,14 @@ public class Pet {
 
 	public void setSpecies(String species) {
 		this.species = species;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public int getAge() {

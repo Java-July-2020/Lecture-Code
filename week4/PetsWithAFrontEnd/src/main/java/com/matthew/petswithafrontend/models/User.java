@@ -2,6 +2,7 @@ package com.matthew.petswithafrontend.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
@@ -34,6 +36,9 @@ public class User {
 	private String password;
 	@Transient
 	private String confirmPassword;
+	
+	@OneToMany(mappedBy="owner", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private List<Pet> pets;
 	
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(
@@ -62,6 +67,12 @@ public class User {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public List<Pet> getPets() {
+		return pets;
+	}
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
 	}
 	public List<Pet> getLikedPets() {
 		return likedPets;

@@ -58,4 +58,10 @@ private PetRepository pRepo;
 		// Update DB
 		this.pRepo.save(pet);
 	}
+	
+	// Remove Likes From Pet
+	public void removeLiker(User user, Pet pet) {
+		pet.getLikers().remove(user);
+		this.pRepo.save(pet);
+	}
 }

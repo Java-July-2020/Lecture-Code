@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,6 +76,12 @@ public class PetController {
 		return "redirect:/pets";
 	}
 	
+	@GetMapping("/user/{id}")
+	public String userProfile(@PathVariable("id") Long id, Model viewModel) {
+		viewModel.addAttribute("user", this.uService.findAUser(id));
+		return "profile.jsp";
+	}
+	
 	@GetMapping("/like/{id}")
 	public String like(@PathVariable("id") Long id, HttpSession session) {
 		Long userId = (Long)session.getAttribute("user_id");
@@ -82,6 +89,15 @@ public class PetController {
 		User liker = this.uService.findAUser(userId);
 		Pet likedPet = this.pService.getOnePet(petId);
 		this.pService.addLiker(liker, likedPet);
+		return "redirect:/pets";
+	}
+	
+	@GetMapping("/unlike/{petid}")
+	public String unlike(@PathVariable("petid") Long petId, HttpSession session) {
+		Long userId = (Long)session.getAttribute("user_id");
+		User liker = this.uService.findAUser(userId);
+		Pet likedPet = this.pService.getOnePet(petId);
+		this.pService.removeLiker(liker, likedPet);
 		return "redirect:/pets";
 	}
 	
@@ -100,7 +116,9 @@ public class PetController {
 	}
 	
 	@RequestMapping("/new")
-	public String create(@ModelAttribute("pet") Pet pet) {
+	public String create(@ModelAttribute("pet") Pet pet, HttpSession session, Model viewModel) {
+		Long userId = (Long)session.getAttribute("user_id");
+		viewModel.addAttribute("userId", userId);
 		return "new.jsp";
 	}
 	
@@ -113,20 +131,24 @@ public class PetController {
 			// everything is all good, we can create the pet class
 			this.pService.createPet(pet);
 		}
-		return "redirect:/new";
+		return "redirect:/pets";
 	}
 	
 	@RequestMapping("/{id}")
-	public String viewpet(@PathVariable("id") Long id, Model model, @ModelAttribute("tag") Tag tag) {
+	public String viewpet(@PathVariable("id") Long id, Model model, @ModelAttribute("tag") Tag tag, HttpSession session) {
+		Long userId = (Long)session.getAttribute("user_id");
 		model.addAttribute("pet", pService.getOnePet(id));
+		model.addAttribute("userId", userId);
 		return "show.jsp";
 	}
 	
 	@PostMapping("/tag")
-	public String createTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result, Model model) {
+	public String createTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result, Model model, HttpSession session) {
 		Long petID = tag.getPet().getId();
+		Long userId = (Long)session.getAttribute("user_id");
 		if(result.hasErrors()) {
 			model.addAttribute("pet", pService.getOnePet(petID));
+			model.addAttribute("userId", userId);
 			return "show.jsp";
 		} else {
 			this.tService.create(tag);
@@ -135,12 +157,14 @@ public class PetController {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
-	public String updatePet(@Valid @ModelAttribute("pet") Pet updatedPet, BindingResult result,  @ModelAttribute("tag") Tag tag) {
+	public String updatePet(@Valid @ModelAttribute("pet") Pet updatedPet, BindingResult result,  @ModelAttribute("tag") Tag tag, HttpSession session, Model model) {
+		Long userId = (Long)session.getAttribute("user_id");
 		if(result.hasErrors()) {
+			model.addAttribute("userId", userId);
 			return "show.jsp";
 		} else {
 			pService.updatePet(updatedPet);
-			return "redirect:/";
+			return "redirect:/pets";
 		}
 	}
 	
@@ -166,6 +190,12 @@ public class PetController {
 		return "redirect:/";
 	}
 	
+	// Delete localhost:8080 / <id>
+	@DeleteMapping("/{id}")
+	public String delete(@PathVariable("id") Long id) {
+		this.pService.deletePet(id);
+		return "redirect:/pets";
+	}
 	
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {

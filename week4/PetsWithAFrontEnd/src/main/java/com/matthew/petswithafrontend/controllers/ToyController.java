@@ -36,7 +36,7 @@ public class ToyController {
 			return "toys/new.jsp";
 		} else {
 			this.tService.create(toy);
-			return "redirect:/";
+			return "redirect:/pets";
 		}
 	}
 }
